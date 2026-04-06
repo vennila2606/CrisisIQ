@@ -5,7 +5,6 @@ class CrisisEnv:
     def __init__(self):
         self.tasks = json.load(open("data/tasks.json"))
         self.current_task = None
-
     def reset(self):
         self.current_task = random.choice(self.tasks)
         return self.current_task["observation"]
