@@ -1,11 +1,16 @@
-def grade(predicted, correct, time_taken):
+def grade(predicted, correct, time_taken, severity):
+    score = 0
+    
     if predicted == correct:
+        score += 1
+        
         if correct == "ESCALATE_ALERT" and time_taken <= 2:
-            return 1.0
-        return 1.0
+            score += 0.5
     
     elif predicted in ["VERIFY", "REQUEST_MORE_INFO"]:
-        return 0.5
+        score += 0.3
     
-    else:
-        return 0.0
+    if predicted == "IGNORE" and severity == "high":
+        score -= 2
+    
+    return score
