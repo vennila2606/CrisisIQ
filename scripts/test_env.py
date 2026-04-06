@@ -1,4 +1,4 @@
-from core.environment import CrisisEnv
+from environment import CrisisEnv
 
 env = CrisisEnv()
 
