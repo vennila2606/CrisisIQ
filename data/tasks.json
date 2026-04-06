@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Aliens spotted in Chennai",
+      "source": "random_blog",
+      "confidence_score": 0.1,
+      "location": "Chennai",
+      "time_since_post": "2 minutes",
+      "related_reports": 0,
+      "severity_level": "low"
+    },
+    "correct_action": "IGNORE"
+  }
+]
