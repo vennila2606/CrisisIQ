@@ -12,7 +12,7 @@ class CrisisEnv:
 
     def step(self, action):
         correct = self.current_task["correct_action"]
-
+ 
         reward = 0
         done = False
 
@@ -24,4 +24,4 @@ class CrisisEnv:
         else:
             reward = -1
 
-        return self.current_task["observation"], reward, done, {}
+        return self.current_task["observation"], reward, done, {} 
