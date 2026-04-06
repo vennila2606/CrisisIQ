@@ -1,0 +1,23 @@
+name: Crisis Intelligence Environment
+actions:
+  - VERIFY
+  - ESCALATE_ALERT
+  - IGNORE
+  - REQUEST_MORE_INFO
+
+observation_space:
+  headline: string
+  source: string
+  confidence_score: float
+  location: string
+  time_since_post: string
+  related_reports: int
+  verified_sources: int
+  severity_level: string
+
+reward:
+  correct: +1
+  fast_escalation: +1.5
+  verify_bonus: +0.5
+  false_alarm: -1
+  ignore_real: -2
