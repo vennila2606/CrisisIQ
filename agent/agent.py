@@ -1,4 +1,4 @@
-def decide_action(observation):
+"""def decide_action(observation):
     confidence = observation.get("confidence_score", 0)
     severity = observation.get("severity_level", "low").lower()
     reports = observation.get("related_reports", 0)
@@ -33,4 +33,32 @@ if __name__ == "__main__":
     }
 
     action = decide_action(sample_obs)
-    print("Predicted Action:", action)
+    print("Predicted Action:", action)"""
+def decide_action(obs):
+    confidence = obs.get("confidence_score", 0)
+    severity = obs.get("severity_level", "low")
+    reports = obs.get("related_reports", 0)
+    time = obs.get("time_elapsed", 0)
+
+    # 🚨 Critical fast decisions
+    if severity == "high":
+        if reports >= 3:
+            return "ESCALATE_ALERT"
+        if confidence > 0.7:
+            return "ESCALATE_ALERT"
+        if confidence < 0.3 and reports >= 3:
+            return "VERIFY"
+
+    # ❌ Fake / low confidence
+    if confidence < 0.3 and reports == 0:
+        return "IGNORE"
+
+    # 🟡 Medium uncertainty
+    if reports >= 2:
+        return "VERIFY"
+
+    # ⏱ If time passing → force decision
+    if time > 2:
+        return "ESCALATE_ALERT"
+
+    return "REQUEST_MORE_INFO"
