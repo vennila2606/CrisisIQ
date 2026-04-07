@@ -1,89 +1,79 @@
-import json
+from evaluation.grader import grade
 import random
 
 
 class CrisisEnv:
-    def __init__(self):
-        try:
-            with open("data/tasks.json", "r") as f:
-                self.tasks = json.load(f)
-        except FileNotFoundError:
-            raise FileNotFoundError("❌ tasks.json not found in data/ folder")
-        except json.JSONDecodeError:
-            raise ValueError("❌ tasks.json is not valid JSON")
-
+    def __init__(self, tasks):
+        self.tasks = tasks
         self.current_task = None
+        self.state_data = {}
         self.time_step = 0
-        self.verified_count = 0
 
     def reset(self):
-        if not self.tasks:
-            raise ValueError("❌ No tasks available in dataset")
-
+        # Pick random task
         self.current_task = random.choice(self.tasks)
 
+        # Reset state
+        self.state_data = {
+            "verified_sources": 0,
+            "actions_taken": [],
+            "time_elapsed": 0,
+            "done": False
+        }
 
         self.time_step = 0
-        self.verified_count = 0
 
-        return self.current_task["observation"]
+        return self._get_observation()
+
+    def _get_observation(self):
+        obs = self.current_task["observation"].copy()
+
+        # Add dynamic state info
+        obs["verified_sources"] = self.state_data["verified_sources"]
+        obs["time_elapsed"] = self.state_data["time_elapsed"]
+
+        return obs
 
     def step(self, action):
-        if self.current_task is None:
-            raise RuntimeError("❌ Call reset() before step()")
+        # Get correct action and severity
+        correct_action = self.current_task["correct_action"]
+        severity = self.current_task["observation"]["severity_level"]
 
-        correct = self.current_task.get("correct_action", None)
-        severity = self.current_task["observation"].get("severity_level", "low")
+        # Track action
+        self.state_data["actions_taken"].append(action)
 
-        reward = 0
+        # Update time
+        self.time_step += 1
+        self.state_data["time_elapsed"] += 1
+
+        # ✅ Use grader (ONLY source of reward)
+        reward = grade(
+            action,
+            correct_action,
+            severity,
+            self.time_step,
+            self.state_data["verified_sources"]
+        )
+
+        # Update state for VERIFY
+        if action == "VERIFY":
+            self.state_data["verified_sources"] += 1
+
+        # Done conditions
         done = False
 
-
-        self.time_step += 1
-
-
-        if action == correct:
-            reward += 1
-
-
-            if action == "ESCALATE_ALERT" and self.time_step <= 2:
-                reward += 1.5
-
+        # If correct final decision → stop
+        if action == correct_action:
             done = True
 
-        elif action == "VERIFY":
-            reward += 0.5
-            self.verified_count += 1
-
-        elif action == "REQUEST_MORE_INFO":
-            reward += 0.3
-
-        elif action == "IGNORE":
-            if severity == "high":
-                reward -= 2  
-                done = True
-            else:
-                reward += 0  
-
-        else:
-            reward -= 1 
-
-
-        if self.time_step > 3:
-            reward -= 0.5
-
-
+        # Limit steps
         if self.time_step >= 5:
             done = True
 
-        return self.current_task["observation"], reward, done, {
-            "time_step": self.time_step,
-            "verified_count": self.verified_count
-        }
+        # Save done state
+        self.state_data["done"] = done
+
+        return self._get_observation(), reward, done, {}
 
     def state(self):
-        return {
-            "time_step": self.time_step,
-            "verified_count": self.verified_count,
-            "current_task": self.current_task
-        }
+        return self.state_data
