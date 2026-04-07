@@ -35,8 +35,8 @@ To build an environment where an AI agent:
 -  Simulates real-world crisis scenarios
 -  Balances **accuracy vs speed**
 -  Handles **uncertainty and conflicting data**
-- 📊 Reward-based evaluation system
-- 🔄 Multi-step decision making
+-  Reward-based evaluation system
+-  Multi-step decision making
 
 ---
 
