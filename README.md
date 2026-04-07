@@ -32,9 +32,9 @@ To build an environment where an AI agent:
 
 ## 🧠 Key Features
 
-- 🔍 Simulates real-world crisis scenarios
-- ⚖️ Balances **accuracy vs speed**
-- 🧩 Handles **uncertainty and conflicting data**
+-  Simulates real-world crisis scenarios
+-  Balances **accuracy vs speed**
+-  Handles **uncertainty and conflicting data**
 - 📊 Reward-based evaluation system
 - 🔄 Multi-step decision making
 
