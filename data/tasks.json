@@ -3,24 +3,10 @@
     "id": 1,
     "difficulty": "easy",
     "observation": {
-      "headline": "Aliens spotted in Chennai sky",
-      "source": "random_blog",
-      "confidence_score": 0.1,
-      "location": "Chennai",
-      "time_since_post": "2 minutes",
-      "related_reports": 0,
-      "severity_level": "low"
-    },
-    "correct_action": "IGNORE"
-  },
-  {
-    "id": 2,
-    "difficulty": "easy",
-    "observation": {
-      "headline": "Fake rumor about zombie outbreak spreading",
-      "source": "unknown_user",
+      "headline": "Fake rumor spreading online",
+      "source": "unknown",
       "confidence_score": 0.2,
-      "location": "Mumbai",
+      "location": "Chennai",
       "time_since_post": "5 minutes",
       "related_reports": 0,
       "severity_level": "low"
@@ -28,35 +14,21 @@
     "correct_action": "IGNORE"
   },
   {
-    "id": 3,
+    "id": 2,
     "difficulty": "medium",
     "observation": {
-      "headline": "Bridge crack reported near highway",
+      "headline": "Bridge crack reported",
       "source": "local_news",
       "confidence_score": 0.5,
       "location": "Coimbatore",
-      "time_since_post": "15 minutes",
+      "time_since_post": "10 minutes",
       "related_reports": 2,
       "severity_level": "medium"
     },
     "correct_action": "VERIFY"
   },
   {
-    "id": 4,
-    "difficulty": "medium",
-    "observation": {
-      "headline": "Possible gas leak reported in residential area",
-      "source": "citizen_report",
-      "confidence_score": 0.6,
-      "location": "Delhi",
-      "time_since_post": "10 minutes",
-      "related_reports": 1,
-      "severity_level": "medium"
-    },
-    "correct_action": "REQUEST_MORE_INFO"
-  },
-  {
-    "id": 5,
+    "id": 3,
     "difficulty": "hard",
     "observation": {
       "headline": "Dam overflow warning issued",
@@ -68,75 +40,5 @@
       "severity_level": "high"
     },
     "correct_action": "ESCALATE_ALERT"
-  },
-  {
-    "id": 6,
-    "difficulty": "hard",
-    "observation": {
-      "headline": "Flood emergency declared after heavy rainfall",
-      "source": "official_news",
-      "confidence_score": 0.85,
-      "location": "Bangalore",
-      "time_since_post": "3 minutes",
-      "related_reports": 4,
-      "severity_level": "high"
-    },
-    "correct_action": "ESCALATE_ALERT"
-  },
-  {
-    "id": 7,
-    "difficulty": "medium",
-    "observation": {
-      "headline": "Fire accident reported in warehouse",
-      "source": "local_news",
-      "confidence_score": 0.55,
-      "location": "Hyderabad",
-      "time_since_post": "8 minutes",
-      "related_reports": 2,
-      "severity_level": "medium"
-    },
-    "correct_action": "VERIFY"
-  },
-  {
-    "id": 8,
-    "difficulty": "easy",
-    "observation": {
-      "headline": "Celebrity rumor causing panic online",
-      "source": "fan_page",
-      "confidence_score": 0.2,
-      "location": "Chennai",
-      "time_since_post": "12 minutes",
-      "related_reports": 0,
-      "severity_level": "low"
-    },
-    "correct_action": "IGNORE"
-  },
-  {
-    "id": 9,
-    "difficulty": "hard",
-    "observation": {
-      "headline": "Earthquake tremors detected across region",
-      "source": "gov_alert",
-      "confidence_score": 0.95,
-      "location": "Nepal border",
-      "time_since_post": "1 minute",
-      "related_reports": 6,
-      "severity_level": "high"
-    },
-    "correct_action": "ESCALATE_ALERT"
-  },
-  {
-    "id": 10,
-    "difficulty": "medium",
-    "observation": {
-      "headline": "Unverified report of building collapse",
-      "source": "social_media",
-      "confidence_score": 0.45,
-      "location": "Pune",
-      "time_since_post": "7 minutes",
-      "related_reports": 2,
-      "severity_level": "medium"
-    },
-    "correct_action": "VERIFY"
   }
 ]
