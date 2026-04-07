@@ -1,5 +1,5 @@
 from env.environment import CrisisEnv
-from agent import decide_action
+from agent.agent import decide_action
 
 env = CrisisEnv()
 
