@@ -40,4 +40,3 @@ To build an environment where an AI agent:
 
 ---
 
-## 🧩 System Architecture
