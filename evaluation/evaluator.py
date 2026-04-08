@@ -18,7 +18,7 @@ def evaluate():
         tasks = json.load(f)
 
     # ✅ Create environment
-    env = CrisisEnv(tasks)
+    env = CrisisEnv()
 
     total_score = 0
     correct = 0
