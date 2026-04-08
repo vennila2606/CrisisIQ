@@ -1,4 +1,5 @@
 🛰️ CrisisIQ: Crisis Intelligence & News Verification Environment
+
 📌 Overview
 
 CrisisIQ is an AI simulation environment designed to evaluate how intelligent agents make decisions during crisis situations involving uncertain and potentially misleading information.
