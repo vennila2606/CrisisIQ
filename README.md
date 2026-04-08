@@ -148,7 +148,9 @@ git clone <your-repo-link>
 cd CrisisIQ
 2. Install dependencies
 pip install -r requirements.txt
+
 🚀 Usage
+--
 Run evaluation (FULL SYSTEM)
 python evaluation/evaluator.py
 Run single simulation
@@ -157,7 +159,9 @@ Generate dataset
 python data/dataset_generator.py
 Run LLM baseline (optional)
 python scripts/baseline_inference.py
+
 📊 Baseline Performance
+--
 
 Example results from evaluation:
 
@@ -177,7 +181,9 @@ Limited adaptability
 Uses language model reasoning
 Handles complex ambiguity
 More flexible but slower
+
 🧠 Key Innovation
+--
 
 Unlike traditional classification systems, CrisisIQ focuses on:
 
@@ -188,18 +194,23 @@ The agent must:
 act quickly ⚡
 avoid mistakes 🎯
 handle incomplete information 📉
+
 🚀 Future Work
+--
 Reinforcement learning agents
 Multi-agent coordination
 Real-time data integration
 Trust scoring for sources
 Time-decay reliability modeling
+
 🎤 Conclusion
+--
 
 CrisisIQ demonstrates how AI can assist in crisis management by making reliable and timely decisions under uncertainty.
 
 This project highlights the importance of balancing speed, accuracy, and risk in real-world intelligent systems.
 
 📜 License
+--
 
 This project is for academic and research purposes.
