@@ -1,13 +1,13 @@
 🛰️ CrisisIQ: Crisis Intelligence & News Verification Environment
 ---
 📌 Overview
-
+--
 CrisisIQ is an AI simulation environment designed to evaluate how intelligent agents make decisions during crisis situations involving uncertain and potentially misleading information.
 
 The system models real-world scenarios such as disaster alerts, social media reports, and emergency warnings, where agents must decide how to respond under time pressure, uncertainty, and risk.
 
 🚨 Motivation
-
+--
 During real-world crises (floods, earthquakes, conflicts):
 
 Misinformation spreads rapidly
