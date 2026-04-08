@@ -1,5 +1,5 @@
 🛰️ CrisisIQ: Crisis Intelligence & News Verification Environment
----
+-------
 📌 Overview
 --
 CrisisIQ is an AI simulation environment designed to evaluate how intelligent agents make decisions during crisis situations involving uncertain and potentially misleading information.
@@ -23,7 +23,7 @@ Incomplete information
 CrisisIQ simulates this challenge and evaluates how well AI agents handle it.
 
 🌍 Environment Description
-
+--
 CrisisIQ is a step-based simulation environment where:
 
 The agent receives a crisis-related observation
@@ -60,7 +60,9 @@ related_reports	Supporting reports count
 severity_level	Risk level (low/medium/high)
 time_since_post	Recency of information
 verified_sources	Number of confirmations
+
 🎯 Action Space
+--
 
 The agent can choose one of the following actions:
 
@@ -69,7 +71,9 @@ VERIFY	Check credibility of information
 ESCALATE_ALERT	Trigger emergency response
 IGNORE	Dismiss false or irrelevant info
 REQUEST_MORE_INFO	Ask for additional data
+
 🧩 Task Design & Difficulty
+--
 
 The environment includes multiple tasks categorized by difficulty:
 
@@ -99,6 +103,7 @@ High severity but low confidence
 These require deeper reasoning and careful decision-making.
 
 🧠 Reward System
+--
 
 The agent is evaluated using a reward function:
 
