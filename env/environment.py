@@ -158,4 +158,3 @@ class CrisisEnv:
 
     def state(self):
         return self.state_data
-
