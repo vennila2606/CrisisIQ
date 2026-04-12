@@ -11,7 +11,8 @@
       "related_reports": 4,
       "severity_level": "high"
     },
-    "correct_action": "ESCALATE_ALERT"
+    "correct_action": "ESCALATE_ALERT",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 2,
@@ -25,7 +26,8 @@
       "related_reports": 5,
       "severity_level": "low"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 3,
@@ -39,7 +41,8 @@
       "related_reports": 5,
       "severity_level": "medium"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 4,
@@ -53,7 +56,8 @@
       "related_reports": 4,
       "severity_level": "high"
     },
-    "correct_action": "ESCALATE_ALERT"
+    "correct_action": "ESCALATE_ALERT",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 5,
@@ -67,7 +71,8 @@
       "related_reports": 0,
       "severity_level": "high"
     },
-    "correct_action": "REQUEST_MORE_INFO"
+    "correct_action": "REQUEST_MORE_INFO",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 6,
@@ -81,7 +86,8 @@
       "related_reports": 0,
       "severity_level": "low"
     },
-    "correct_action": "REQUEST_MORE_INFO"
+    "correct_action": "REQUEST_MORE_INFO",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 7,
@@ -95,7 +101,8 @@
       "related_reports": 3,
       "severity_level": "low"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 8,
@@ -109,7 +116,8 @@
       "related_reports": 2,
       "severity_level": "high"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 9,
@@ -123,7 +131,8 @@
       "related_reports": 0,
       "severity_level": "high"
     },
-    "correct_action": "IGNORE"
+    "correct_action": "IGNORE",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 10,
@@ -137,7 +146,8 @@
       "related_reports": 1,
       "severity_level": "medium"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 11,
@@ -151,7 +161,8 @@
       "related_reports": 5,
       "severity_level": "low"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 12,
@@ -165,7 +176,8 @@
       "related_reports": 4,
       "severity_level": "medium"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 13,
@@ -179,7 +191,8 @@
       "related_reports": 4,
       "severity_level": "low"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 14,
@@ -193,7 +206,8 @@
       "related_reports": 3,
       "severity_level": "medium"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 15,
@@ -207,7 +221,8 @@
       "related_reports": 3,
       "severity_level": "high"
     },
-    "correct_action": "ESCALATE_ALERT"
+    "correct_action": "ESCALATE_ALERT",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 16,
@@ -221,7 +236,8 @@
       "related_reports": 0,
       "severity_level": "low"
     },
-    "correct_action": "REQUEST_MORE_INFO"
+    "correct_action": "REQUEST_MORE_INFO",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 17,
@@ -235,7 +251,8 @@
       "related_reports": 4,
       "severity_level": "low"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 18,
@@ -249,7 +266,8 @@
       "related_reports": 4,
       "severity_level": "medium"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 19,
@@ -263,7 +281,8 @@
       "related_reports": 0,
       "severity_level": "high"
     },
-    "correct_action": "IGNORE"
+    "correct_action": "IGNORE",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   },
   {
     "id": 20,
@@ -277,6 +296,7 @@
       "related_reports": 2,
       "severity_level": "high"
     },
-    "correct_action": "VERIFY"
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
   }
 ]
