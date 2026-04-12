@@ -1,9 +1,22 @@
+import sys
+import os
 import json
+
+# ✅ Fix import path
+sys.path.append(os.path.abspath("."))
+
 from env.environment import CrisisEnv
 from agent.agent import decide_action
 
+
 def run_simulation():
-    tasks = json.load(open("data/tasks.json"))
+    # ✅ Safe path for Docker
+    base_dir = os.path.dirname(__file__)
+    tasks_path = os.path.join(base_dir, "data", "tasks.json")
+
+    with open(tasks_path, "r") as f:
+        tasks = json.load(f)
+
     env = CrisisEnv(tasks)
 
     obs = env.reset()
