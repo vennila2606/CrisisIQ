@@ -1,34 +1,29 @@
 def grade(action, correct_action, severity, time_step, verified_sources):
-    reward = 0
-
-    # ✅ Correct decision
+    """
+    Must return strictly between 0 and 1 (never 0.0 or 1.0)
+    """
     if action == correct_action:
-        reward += 1
+        if time_step == 1:
+            score = 0.95  # fast and correct
+        elif verified_sources > 0:
+            score = 0.85  # correct with verification
+        else:
+            score = 0.75  # correct
 
-        # Bonus for fast escalation
-        if action == "ESCALATE_ALERT" and time_step <= 2:
-            reward += 1.5
-
-    # 🟡 Partial correct decisions
     elif action == "VERIFY":
-        reward += 0.5
+        score = 0.55  # safe but not final answer
 
     elif action == "REQUEST_MORE_INFO":
-        reward += 0.3
+        score = 0.45  # cautious
 
-    # ❌ Wrong decisions
     elif action == "IGNORE" and severity == "high":
-        reward -= 2   # very bad
+        score = 0.05  # dangerous
+
+    elif action == "ESCALATE_ALERT" and severity == "low":
+        score = 0.15  # overreaction
 
     else:
-        reward -= 1   # normal wrong
+        score = 0.25  # wrong
 
-    # ⏱ Time penalty (slow decision)
-    if time_step > 3:
-        reward -= 0.2
-
-    # 📊 Bonus for gathering info
-    if verified_sources >= 2:
-        reward += 0.2
-
-    return reward
+    # ✅ Guarantee strictly between 0 and 1
+    return max(0.01, min(0.99, score))
