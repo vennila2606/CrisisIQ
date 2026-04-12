@@ -4,7 +4,7 @@ from agent.agent import decide_action
 
 def run_simulation():
     tasks = json.load(open("data/tasks.json"))
-    env = CrisisEnv(tasks)
+    env = CrisisEnv()
 
     obs = env.reset()
     done = False
