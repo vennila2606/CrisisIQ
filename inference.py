@@ -2,135 +2,84 @@ import sys
 import os
 import json
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-try:
-    from openai import OpenAI
-    from env.environment import CrisisEnv
-except ImportError as e:
-    print(json.dumps({"type": "[ERROR]", "message": f"Import failed: {str(e)}"}))
-    sys.exit(1)
+from openai import OpenAI
+from env.environment import CrisisEnv
 
-# ✅ Groq credentials via env vars
-API_BASE_URL = os.getenv("API_BASE_URL", "https://api.groq.com/openai/v1")
-MODEL_NAME = os.getenv("MODEL_NAME", "llama-3.3-70b-versatile")
-HF_TOKEN = os.getenv("HF_TOKEN", "")
+# ✅ Validate env vars before starting
+HF_TOKEN = os.getenv("HF_TOKEN")
+API_BASE_URL = os.getenv("API_BASE_URL")
+MODEL_NAME = os.getenv("MODEL_NAME")
 
-try:
-    client = OpenAI(api_key=HF_TOKEN, base_url=API_BASE_URL)
-except Exception as e:
-    client = None
+if not HF_TOKEN:
+    raise EnvironmentError("HF_TOKEN is not set")
+if not API_BASE_URL:
+    raise EnvironmentError("API_BASE_URL is not set")
+if not MODEL_NAME:
+    raise EnvironmentError("MODEL_NAME is not set")
 
-
-def rule_based_action(observation):
-    """Fallback rule-based agent when LLM is unavailable."""
-    confidence = observation.get("confidence_score", 0.5)
-    severity = observation.get("severity_level", "low")
-    reports = observation.get("related_reports", 0)
-
-    if confidence < 0.2 and reports == 0:
-        return "IGNORE"
-    elif severity == "high" and reports >= 3:
-        return "ESCALATE_ALERT"
-    elif confidence > 0.7:
-        return "ESCALATE_ALERT"
-    elif reports >= 2:
-        return "VERIFY"
-    else:
-        return "REQUEST_MORE_INFO"
-
+client = OpenAI(
+    api_key=HF_TOKEN,
+    base_url=API_BASE_URL,
+)
 
 def llm_decide_action(observation):
-    """Try Groq LLM first, fall back to rule-based if it fails."""
+    prompt = f"""
+You are a crisis intelligence agent. Given the situation below, choose ONE action:
+VERIFY, ESCALATE_ALERT, IGNORE, REQUEST_MORE_INFO
+
+Situation: {json.dumps(observation, indent=2)}
+
+Respond with only the action word, nothing else.
+"""
     try:
-        if not client or not HF_TOKEN:
-            return rule_based_action(observation)
-
-        prompt = f"""You are a crisis intelligence agent.
-Given the situation below, choose ONE action: VERIFY, ESCALATE_ALERT, IGNORE, REQUEST_MORE_INFO
-
-Situation:
-{json.dumps(observation, indent=2)}
-
-Respond with only the action word. Nothing else."""
-
         response = client.chat.completions.create(
             model=MODEL_NAME,
             messages=[{"role": "user", "content": prompt}],
             temperature=0
         )
-        action = response.choices[0].message.content.strip().upper()
-        if action not in ["VERIFY", "ESCALATE_ALERT", "IGNORE", "REQUEST_MORE_INFO"]:
-            return rule_based_action(observation)
+        action = response.choices[0].message.content.strip()
+        # ✅ Validate response is one of the allowed actions
+        valid_actions = ["VERIFY", "ESCALATE_ALERT", "IGNORE", "REQUEST_MORE_INFO"]
+        if action not in valid_actions:
+            action = "VERIFY"  # fallback
         return action
-    except Exception:
-        return rule_based_action(observation)
-
+    except Exception as e:
+        print(f"❌ LLM call failed: {e}")
+        return "VERIFY"  # fallback so simulation doesn't crash
 
 def run_baseline():
-    try:
-        tasks = json.load(open("data/tasks.json"))
-        env = CrisisEnv(tasks)
-        total_score = 0
+    tasks_path = os.path.join(os.path.dirname(__file__), "data", "tasks.json")
+    with open(tasks_path, "r") as f:
+        tasks = json.load(f)
 
-        for i, task in enumerate(tasks):
+    env = CrisisEnv(tasks)
+    total_score = 0
+
+    print("[START]")
+
+    for i in range(2):
+        obs = env.reset()
+        done = False
+        step_num = 0
+
+        print(f"[STEP] task={i+1} status=started")
+
+        while not done:
             try:
-                obs = env.reset()
-                done = False
-                step_num = 0
-
-                print(json.dumps({
-                    "type": "[START]",
-                    "task_id": i + 1,
-                    "headline": obs.get("headline", "")
-                }))
-
-                while not done:
-                    action = llm_decide_action(obs)
-                    obs, reward, done, _ = env.step(action)
-                    total_score += reward
-                    step_num += 1
-
-                    print(json.dumps({
-                        "type": "[STEP]",
-                        "task_id": i + 1,
-                        "step": step_num,
-                        "action": action,
-                        "reward": reward
-                    }))
-
-                print(json.dumps({
-                    "type": "[END]",
-                    "task_id": i + 1,
-                    "total_reward": round(total_score, 2),
-                    "done": True
-                }))
-
+                action = llm_decide_action(obs)
             except Exception as e:
-                print(json.dumps({
-                    "type": "[ERROR]",
-                    "task_id": i + 1,
-                    "message": str(e)
-                }))
-                continue
+                print(f"❌ Action decision failed: {e}")
+                action = "VERIFY"
 
-        print(json.dumps({
-            "type": "[SUMMARY]",
-            "total_score": round(total_score, 2),
-            "tasks_run": len(tasks)
-        }))
+            obs, reward, done, _ = env.step(action)
+            total_score += reward
+            step_num += 1
 
-    except Exception as e:
-        print(json.dumps({"type": "[ERROR]", "message": str(e)}))
-        sys.exit(1)
+            print(f"[STEP] task={i+1} step={step_num} action={action} reward={reward}")
 
+    print(f"[END] total_score={total_score}")
 
 if __name__ == "__main__":
     run_baseline()
-
-
-
-
-
-         
-    
