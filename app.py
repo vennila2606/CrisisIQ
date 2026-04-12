@@ -5,9 +5,7 @@ import os
 import sys
 import random
 
-#sys.path.insert(0, os.path.abspath("."))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from app import app
+sys.path.insert(0, os.path.abspath("."))
 
 from env.environment import CrisisEnv
 from agent.agent import decide_action
