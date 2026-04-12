@@ -1,4 +1,4 @@
-[project]
+"""[project]
 name = "crisisiq"
 version = "1.0.0"
 description = "Crisis Intelligence & News Verification Environment"
@@ -14,4 +14,17 @@ dependencies = [
  
 [build-system]
 requires = ["setuptools"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.backends.legacy:build"""""
+[project]
+name = "crisis-intelligence-system"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "openai",
+    "openenv-core>=0.2.0",
+]
+
+[project.scripts]
+server = "server.app:app"
