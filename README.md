@@ -1,3 +1,12 @@
+---
+license: mit
+title: CrisiIQ
+sdk: docker
+emoji: 👀
+colorFrom: pink
+colorTo: purple
+short_description: An RL environment where AI agents verify crisis reports
+---
 🛰️ CrisisIQ: Crisis Intelligence & News Verification Environment
 📌 Overview
 CrisisIQ is an AI simulation environment designed to evaluate how intelligent agents make decisions during crisis situations involving uncertain and potentially misleading information.
