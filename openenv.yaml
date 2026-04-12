@@ -1,56 +1,27 @@
-name: CrisisIQ
+name: Crisis Intelligence Environment
 version: "1.0"
-description: "A crisis intelligence environment where AI agents verify and act on crisis-related information responsibly under time pressure."
+entrypoint: inference.py
+port: 8000
 
-api:
-  reset:
-    method: POST
-    path: /reset
-  step:
-    method: POST
-    path: /step
-  state:
-    method: GET
-    path: /state
+actions:
+  - VERIFY
+  - ESCALATE_ALERT
+  - IGNORE
+  - REQUEST_MORE_INFO
 
 observation_space:
-  type: object
-  properties:
-    headline:
-      type: string
-    source:
-      type: string
-    confidence_score:
-      type: number
-    location:
-      type: string
-    time_since_post:
-      type: string
-    related_reports:
-      type: integer
-    verified_sources:
-      type: integer
-    severity_level:
-      type: string
+  headline: string
+  source: string
+  confidence_score: float
+  location: string
+  time_since_post: string
+  related_reports: int
+  verified_sources: int
+  severity_level: string
 
-action_space:
-  type: string
-  enum:
-    - VERIFY
-    - ESCALATE_ALERT
-    - IGNORE
-    - REQUEST_MORE_INFO
-
-tasks:
-  - id: task_easy
-    name: Clearly Fake News
-    difficulty: easy
-    description: "Identify and ignore a low-credibility fake crisis report."
-  - id: task_medium
-    name: Uncertain Report
-    difficulty: medium
-    description: "Handle an ambiguous report requiring verification."
-  - id: task_hard
-    name: High-Risk Real Crisis
-    difficulty: hard
-    description: "Rapidly escalate a genuine high-severity multi-source crisis alert."
+reward:
+  correct: +1
+  fast_escalation: +1.5
+  verify_bonus: +0.5
+  false_alarm: -1
+  ignore_real: -2
