@@ -1,61 +1,302 @@
-name: CrisisIQ
-version: "1.0"
-description: "Crisis intelligence environment where AI agents verify and act on crisis information under time pressure."
-
-tasks:
-  - id: t1_easy
-    grader: evaluation.grader:EasyGrader
-    name: "Fake News Detection"
-    description: "A low-credibility rumor is spreading online with no supporting evidence. The agent must identify and ignore it."
-    difficulty: "easy"
-
-  - id: t2_medium
-    grader: evaluation.grader:MediumGrader
-    name: "Uncertain Crisis Report"
-    description: "A bridge crack has been reported by a local news outlet with some supporting data. The agent must verify before acting."
-    difficulty: "medium"
-
-  - id: t3_hard
-    grader: evaluation.grader:HardGrader
-    name: "High-Risk Dam Overflow"
-    description: "Multiple verified sources report an imminent dam overflow. The agent must escalate the alert immediately."
-    difficulty: "hard"
-
-api:
-  reset:
-    method: POST
-    path: /reset
-  step:
-    method: POST
-    path: /step
-  state:
-    method: GET
-    path: /state
-
-observation_space:
-  type: object
-  properties:
-    headline:
-      type: string
-    source:
-      type: string
-    confidence_score:
-      type: number
-    location:
-      type: string
-    time_since_post:
-      type: string
-    related_reports:
-      type: integer
-    verified_sources:
-      type: integer
-    severity_level:
-      type: string
-
-action_space:
-  type: string
-  enum:
-    - VERIFY
-    - ESCALATE_ALERT
-    - IGNORE
-    - REQUEST_MORE_INFO
+[
+  {
+    "id": 1,
+    "difficulty": "hard",
+    "observation": {
+      "headline": "Gas leak suspected",
+      "source": "gov_alert",
+      "confidence_score": 0.14,
+      "location": "India",
+      "time_since_post": "19 minutes",
+      "related_reports": 4,
+      "severity_level": "high"
+    },
+    "correct_action": "ESCALATE_ALERT",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 2,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "gov_alert",
+      "confidence_score": 0.73,
+      "location": "India",
+      "time_since_post": "3 minutes",
+      "related_reports": 5,
+      "severity_level": "low"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 3,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Building crack reported",
+      "source": "citizen",
+      "confidence_score": 0.27,
+      "location": "India",
+      "time_since_post": "7 minutes",
+      "related_reports": 5,
+      "severity_level": "medium"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 4,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Building crack reported",
+      "source": "citizen",
+      "confidence_score": 0.74,
+      "location": "India",
+      "time_since_post": "13 minutes",
+      "related_reports": 4,
+      "severity_level": "high"
+    },
+    "correct_action": "ESCALATE_ALERT",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 5,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "twitter",
+      "confidence_score": 0.55,
+      "location": "India",
+      "time_since_post": "15 minutes",
+      "related_reports": 0,
+      "severity_level": "high"
+    },
+    "correct_action": "REQUEST_MORE_INFO",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 6,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Gas leak suspected",
+      "source": "unknown",
+      "confidence_score": 0.46,
+      "location": "India",
+      "time_since_post": "15 minutes",
+      "related_reports": 0,
+      "severity_level": "low"
+    },
+    "correct_action": "REQUEST_MORE_INFO",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 7,
+    "difficulty": "hard",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "unknown",
+      "confidence_score": 0.54,
+      "location": "India",
+      "time_since_post": "1 minutes",
+      "related_reports": 3,
+      "severity_level": "low"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 8,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Bridge collapse reported",
+      "source": "unknown",
+      "confidence_score": 0.59,
+      "location": "India",
+      "time_since_post": "1 minutes",
+      "related_reports": 2,
+      "severity_level": "high"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 9,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Building crack reported",
+      "source": "twitter",
+      "confidence_score": 0.16,
+      "location": "India",
+      "time_since_post": "9 minutes",
+      "related_reports": 0,
+      "severity_level": "high"
+    },
+    "correct_action": "IGNORE",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 10,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Fire accident in warehouse",
+      "source": "gov_alert",
+      "confidence_score": 0.72,
+      "location": "India",
+      "time_since_post": "14 minutes",
+      "related_reports": 1,
+      "severity_level": "medium"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 11,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "news",
+      "confidence_score": 0.59,
+      "location": "India",
+      "time_since_post": "1 minutes",
+      "related_reports": 5,
+      "severity_level": "low"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 12,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Fake rumor spreading online",
+      "source": "unknown",
+      "confidence_score": 0.67,
+      "location": "India",
+      "time_since_post": "6 minutes",
+      "related_reports": 4,
+      "severity_level": "medium"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 13,
+    "difficulty": "hard",
+    "observation": {
+      "headline": "Fire accident in warehouse",
+      "source": "gov_alert",
+      "confidence_score": 0.42,
+      "location": "India",
+      "time_since_post": "9 minutes",
+      "related_reports": 4,
+      "severity_level": "low"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 14,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Fire accident in warehouse",
+      "source": "news",
+      "confidence_score": 0.78,
+      "location": "India",
+      "time_since_post": "20 minutes",
+      "related_reports": 3,
+      "severity_level": "medium"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 15,
+    "difficulty": "hard",
+    "observation": {
+      "headline": "Earthquake tremors detected",
+      "source": "gov_alert",
+      "confidence_score": 0.12,
+      "location": "India",
+      "time_since_post": "3 minutes",
+      "related_reports": 3,
+      "severity_level": "high"
+    },
+    "correct_action": "ESCALATE_ALERT",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 16,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "unknown",
+      "confidence_score": 0.48,
+      "location": "India",
+      "time_since_post": "13 minutes",
+      "related_reports": 0,
+      "severity_level": "low"
+    },
+    "correct_action": "REQUEST_MORE_INFO",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 17,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Gas leak suspected",
+      "source": "gov_alert",
+      "confidence_score": 0.73,
+      "location": "India",
+      "time_since_post": "5 minutes",
+      "related_reports": 4,
+      "severity_level": "low"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 18,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "twitter",
+      "confidence_score": 0.17,
+      "location": "India",
+      "time_since_post": "5 minutes",
+      "related_reports": 4,
+      "severity_level": "medium"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 19,
+    "difficulty": "hard",
+    "observation": {
+      "headline": "Dam overflow warning",
+      "source": "citizen",
+      "confidence_score": 0.26,
+      "location": "India",
+      "time_since_post": "20 minutes",
+      "related_reports": 0,
+      "severity_level": "high"
+    },
+    "correct_action": "IGNORE",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  },
+  {
+    "id": 20,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Building crack reported",
+      "source": "twitter",
+      "confidence_score": 0.86,
+      "location": "India",
+      "time_since_post": "12 minutes",
+      "related_reports": 2,
+      "severity_level": "high"
+    },
+    "correct_action": "VERIFY",
+    "grader": {"type": "score", "min": 0.01, "max": 0.99}
+  }
+]
