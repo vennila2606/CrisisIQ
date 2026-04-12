@@ -1,13 +1,24 @@
 [project]
-name = "crisis-intelligence-system"
+name = "crisisiq"
 version = "1.0.0"
-requires-python = ">=3.11"
+description = "Crisis Intelligence & News Verification Environment"
+requires-python = ">=3.10"
 dependencies = [
     "fastapi",
-    "uvicorn",
+    "uvicorn[standard]",
     "openai",
+    "pydantic",
+    "pyyaml",
+    "httpx",
     "openenv-core>=0.2.0",
 ]
-
+ 
 [project.scripts]
-server = "server.app:app"
+server = "server.app:main"
+ 
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+ 
+[tool.setuptools.packages.find]
+where = ["."]
