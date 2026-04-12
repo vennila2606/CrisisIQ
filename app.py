@@ -154,40 +154,134 @@ def main():
 if __name__ == "__main__":
     main()'''
 
-def grade(action, correct_action, severity, time_step, verified_sources):
-    """
-    Returns a score strictly between 0.001 and 0.999.
-    Each condition is mutually exclusive - no double counting.
-    """
+from fastapi import FastAPI, Query
+from pydantic import BaseModel
+from typing import Optional
+import json
+import os
+import sys
 
-    # ── Base score from action correctness (pick exactly one branch) ──
-    if action == correct_action:
-        if action == "ESCALATE_ALERT" and time_step <= 2:
-            score = 0.95   # fast correct escalation
-        else:
-            score = 0.85   # correct but not fast
+sys.path.insert(0, os.path.abspath("."))
 
-    elif action == "VERIFY":
-        score = 0.55       # partial credit - safe choice
+from env.environment import CrisisEnv
+from agent.agent import decide_action
 
-    elif action == "REQUEST_MORE_INFO":
-        score = 0.45       # partial credit - cautious
+app = FastAPI()
 
-    elif action == "IGNORE" and severity == "high":
-        score = 0.05       # very dangerous mistake
+base_dir = os.path.dirname(__file__)
+tasks_path = os.path.join(base_dir, "data", "tasks.json")
+with open(tasks_path, "r") as f:
+    tasks = json.load(f)
 
-    else:
-        score = 0.15       # wrong but not catastrophic
+env = CrisisEnv(tasks)
+_state = {}
+_current_obs = {}
 
-    # ── Single time penalty (only if slow AND not already penalised) ──
-    if time_step > 3 and score > 0.5:
-        score = score - 0.10
+class StepRequest(BaseModel):
+    action: str
 
-    # ── Single verified-sources bonus (only if not already high) ──
-    if verified_sources >= 2 and score < 0.90:
-        score = score + 0.05
+class ResetRequest(BaseModel):
+    task_id: Optional[int] = 1
 
-    # ── Hard clamp — guaranteed strictly within (0.001, 0.999) ──
-    score = max(0.001, min(0.999, round(score, 3)))
+def set_task(task_id: int = 1):
+    task = next((t for t in tasks if t["id"] == task_id), tasks[0])
+    env.current_task = task
+    env.state_data = {
+        "verified_sources": 0,
+        "actions_taken": [],
+        "time_elapsed": 0,
+        "done": False
+    }
+    env.time_step = 0
+    return env._get_observation()
 
-    return score
+@app.get("/")
+def home():
+    return {"message": "Crisis Intelligence System Running 🚀"}
+
+@app.get("/tasks")
+def get_tasks():
+    return {
+        "tasks": [
+            {
+                "id": t["id"],
+                "difficulty": t["difficulty"],
+                "correct_action": t["correct_action"]
+            }
+            for t in tasks
+        ]
+    }
+
+# ✅ Handles POST /reset with OR without body
+@app.post("/reset")
+def reset(request: Optional[ResetRequest] = None):
+    global _state, _current_obs
+    task_id = request.task_id if request and request.task_id else 1
+    obs = set_task(task_id)
+    _current_obs = obs
+    _state = {
+        "task_id": task_id,
+        "observation": obs,
+        "done": False,
+        "past_actions": [],
+        "total_reward": 0
+    }
+    return {"observation": obs, "task_id": task_id}
+
+# ✅ Also handle GET /reset just in case
+@app.get("/reset")
+def reset_get(task_id: int = Query(default=1)):
+    global _state, _current_obs
+    obs = set_task(task_id)
+    _current_obs = obs
+    _state = {
+        "task_id": task_id,
+        "observation": obs,
+        "done": False,
+        "past_actions": [],
+        "total_reward": 0
+    }
+    return {"observation": obs, "task_id": task_id}
+
+@app.post("/step")
+def step(request: StepRequest):
+    global _state, _current_obs
+    action = request.action
+    obs, reward, done, info = env.step(action)
+    reward = max(0.001, min(0.999, round(reward, 3)))
+    _current_obs = obs
+    _state["past_actions"].append({"action": action, "reward": reward})
+    _state["total_reward"] = max(0.001, min(0.999, round(_state["total_reward"] + reward, 3)))
+    _state["done"] = done
+    _state["observation"] = obs
+    return {
+        "observation": obs,
+        "reward": reward,
+        "done": done,
+        "info": info
+    }
+
+@app.get("/state")
+def state():
+    return _state
+
+@app.get("/run")
+def run_simulation():
+    results = []
+    for task in tasks:
+        obs = set_task(task["id"])
+        done = False
+        total_reward = 0
+        step_num = 1
+        while not done:
+            action = decide_action(obs)
+            obs, reward, done, _ = env.step(action)
+            reward = max(0.001, min(0.999, round(reward, 3)))
+            total_reward += reward
+            step_num += 1
+        results.append({
+            "task_id": task["id"],
+            "difficulty": task["difficulty"],
+            "total_reward": round(total_reward, 2)
+        })
+    return {"results": results}
