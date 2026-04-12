@@ -1,27 +1,61 @@
-name: Crisis Intelligence Environment
+name: CrisisIQ
 version: "1.0"
-entrypoint: inference.py
-port: 8000
+description: "Crisis intelligence environment where AI agents verify and act on crisis information under time pressure."
 
-actions:
-  - VERIFY
-  - ESCALATE_ALERT
-  - IGNORE
-  - REQUEST_MORE_INFO
+tasks:
+  - id: t1_easy
+    grader: evaluation.grader:EasyGrader
+    name: "Fake News Detection"
+    description: "A low-credibility rumor is spreading online with no supporting evidence. The agent must identify and ignore it."
+    difficulty: "easy"
+
+  - id: t2_medium
+    grader: evaluation.grader:MediumGrader
+    name: "Uncertain Crisis Report"
+    description: "A bridge crack has been reported by a local news outlet with some supporting data. The agent must verify before acting."
+    difficulty: "medium"
+
+  - id: t3_hard
+    grader: evaluation.grader:HardGrader
+    name: "High-Risk Dam Overflow"
+    description: "Multiple verified sources report an imminent dam overflow. The agent must escalate the alert immediately."
+    difficulty: "hard"
+
+api:
+  reset:
+    method: POST
+    path: /reset
+  step:
+    method: POST
+    path: /step
+  state:
+    method: GET
+    path: /state
 
 observation_space:
-  headline: string
-  source: string
-  confidence_score: float
-  location: string
-  time_since_post: string
-  related_reports: int
-  verified_sources: int
-  severity_level: string
+  type: object
+  properties:
+    headline:
+      type: string
+    source:
+      type: string
+    confidence_score:
+      type: number
+    location:
+      type: string
+    time_since_post:
+      type: string
+    related_reports:
+      type: integer
+    verified_sources:
+      type: integer
+    severity_level:
+      type: string
 
-reward:
-  correct: +1
-  fast_escalation: +1.5
-  verify_bonus: +0.5
-  false_alarm: -1
-  ignore_real: -2
+action_space:
+  type: string
+  enum:
+    - VERIFY
+    - ESCALATE_ALERT
+    - IGNORE
+    - REQUEST_MORE_INFO
