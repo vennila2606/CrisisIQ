@@ -1,15 +1,26 @@
+import sys
+import os
+import json
+import time
+
 print("🔥 APP STARTED")
 
-try:
-    import sys, os, json
-    sys.path.insert(0, os.path.abspath("."))
+# ✅ Fix import path
+sys.path.insert(0, os.path.abspath("."))
 
+try:
     from env.environment import CrisisEnv
     from agent.agent import decide_action
 
     print("✅ Imports successful")
 
-    tasks = json.load(open("data/tasks.json"))
+    # ✅ Safe path for Docker
+    base_dir = os.path.dirname(__file__)
+    tasks_path = os.path.join(base_dir, "data", "tasks.json")
+
+    with open(tasks_path, "r") as f:
+        tasks = json.load(f)
+
     print("✅ JSON loaded")
 
     env = CrisisEnv(tasks)
@@ -22,13 +33,21 @@ try:
         obs, reward, done, _ = env.step(action)
         print("Action:", action, "| Reward:", reward)
 
+    print("✅ Simulation finished")
+
 except Exception as e:
     print("❌ ERROR:", e)
 
 
+# 🔥 KEEP CONTAINER ALIVE (VERY IMPORTANT)
+print("🔄 Keeping container alive...")
+while True:
+    time.sleep(60)
+
+
 
 # ✅ Fix import path
-sys.path.append(os.path.abspath("."))
+""""sys.path.append(os.path.abspath("."))
 
 from env.environment import CrisisEnv
 from agent.agent import decide_action
@@ -59,4 +78,7 @@ def run_simulation():
 
 
 if __name__ == "__main__":
-    print(run_simulation())
+    print(run_simulation())"""
+
+
+
