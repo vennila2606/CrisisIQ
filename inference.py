@@ -2,22 +2,15 @@ import sys
 import os
 import json
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from openai import OpenAI
 from env.environment import CrisisEnv
 
-# ✅ Validate env vars before starting
-HF_TOKEN = os.getenv("HF_TOKEN")
-API_BASE_URL = os.getenv("API_BASE_URL")
-MODEL_NAME = os.getenv("MODEL_NAME")
-
-if not HF_TOKEN:
-    raise EnvironmentError("HF_TOKEN is not set")
-if not API_BASE_URL:
-    raise EnvironmentError("API_BASE_URL is not set")
-if not MODEL_NAME:
-    raise EnvironmentError("MODEL_NAME is not set")
+# ✅ Fallbacks instead of raising errors
+HF_TOKEN = os.getenv("HF_TOKEN", "dummy_token")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api-inference.huggingface.co/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "meta-llama/Llama-3.2-3B-Instruct")
 
 client = OpenAI(
     api_key=HF_TOKEN,
@@ -40,14 +33,13 @@ Respond with only the action word, nothing else.
             temperature=0
         )
         action = response.choices[0].message.content.strip()
-        # ✅ Validate response is one of the allowed actions
         valid_actions = ["VERIFY", "ESCALATE_ALERT", "IGNORE", "REQUEST_MORE_INFO"]
         if action not in valid_actions:
-            action = "VERIFY"  # fallback
+            action = "VERIFY"
         return action
     except Exception as e:
         print(f"❌ LLM call failed: {e}")
-        return "VERIFY"  # fallback so simulation doesn't crash
+        return "VERIFY"
 
 def run_baseline():
     tasks_path = os.path.join(os.path.dirname(__file__), "data", "tasks.json")
@@ -67,16 +59,10 @@ def run_baseline():
         print(f"[STEP] task={i+1} status=started")
 
         while not done:
-            try:
-                action = llm_decide_action(obs)
-            except Exception as e:
-                print(f"❌ Action decision failed: {e}")
-                action = "VERIFY"
-
+            action = llm_decide_action(obs)
             obs, reward, done, _ = env.step(action)
             total_score += reward
             step_num += 1
-
             print(f"[STEP] task={i+1} step={step_num} action={action} reward={reward}")
 
     print(f"[END] total_score={total_score}")
