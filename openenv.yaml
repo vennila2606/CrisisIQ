@@ -19,9 +19,18 @@ observation_space:
   verified_sources: int
   severity_level: string
 
+tasks:
+  - id: task_001
+    grader: evaluation.grader.grade
+  - id: task_002
+    grader: evaluation.grader.grade
+  - id: task_003
+    grader: evaluation.grader.grade
+  - id: task_004
+    grader: evaluation.grader.grade
+  - id: task_005
+    grader: evaluation.grader.grade
+
 reward:
-  correct: +1
-  fast_escalation: +1.5
-  verify_bonus: +0.5
-  false_alarm: -1
-  ignore_real: -2
+  min: 0.001
+  max: 0.999
