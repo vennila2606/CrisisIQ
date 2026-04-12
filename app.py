@@ -85,7 +85,10 @@ app = FastAPI()
 def home():
     return {"message": "Crisis Intelligence System Running 🚀"}
 
-
+@app.get("/state")
+def state():
+    return _state
+    
 @app.get("/run")
 def run_simulation():
     base_dir = os.path.dirname(__file__)
