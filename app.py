@@ -22,7 +22,7 @@ def run_simulation():
 
 if __name__ == "__main__":
     print(run_simulation())"""
-import sys
+"""import sys
 import os
 import json
 import time
@@ -66,4 +66,61 @@ except Exception as e:
 # 🔥 KEEP CONTAINER ALIVE (VERY IMPORTANT)
 print("🔄 Keeping container alive...")
 while True:
-    time.sleep(60)
+    time.sleep(60)"""
+from fastapi import FastAPI
+import json
+import os
+import sys
+
+# Fix imports
+sys.path.insert(0, os.path.abspath("."))
+
+from env.environment import CrisisEnv
+from agent.agent import decide_action
+
+app = FastAPI()
+
+
+@app.get("/")
+def home():
+    return {"message": "Crisis Intelligence System Running 🚀"}
+
+
+@app.get("/run")
+def run_simulation():
+    base_dir = os.path.dirname(__file__)
+    tasks_path = os.path.join(base_dir, "data", "tasks.json")
+
+    with open(tasks_path, "r") as f:
+        tasks = json.load(f)
+
+    env = CrisisEnv(tasks)
+
+    obs = env.reset()
+    done = False
+
+    steps_output = []
+    total_reward = 0
+    step_num = 1
+
+    # Task name
+    task_name = obs.get("headline", "Unknown Task")
+
+    while not done:
+        action = decide_action(obs)
+        obs, reward, done, _ = env.step(action)
+
+        steps_output.append({
+            "step": step_num,
+            "action": action,
+            "reward": reward
+        })
+
+        total_reward += reward
+        step_num += 1
+
+    return {
+        "task": task_name,
+        "steps": steps_output,
+        "total_reward": round(total_reward, 2)
+    }
