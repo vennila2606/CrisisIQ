@@ -1,44 +1,47 @@
-  [
-    {
-      "id": 1,
-      "difficulty": "easy",
-      "observation": {
-        "headline": "Fake rumor spreading online",
-        "source": "unknown",
-        "confidence_score": 0.2,
-        "location": "Chennai",
-        "time_since_post": "5 minutes",
-        "related_reports": 0,
-        "severity_level": "low"
-      },
-      "correct_action": "IGNORE"
+[
+  {
+    "id": 1,
+    "difficulty": "easy",
+    "observation": {
+      "headline": "Fake rumor spreading online",
+      "source": "unknown",
+      "confidence_score": 0.2,
+      "location": "Chennai",
+      "time_since_post": "5 minutes",
+      "related_reports": 0,
+      "verified_sources": 0,
+      "severity_level": "low"
     },
-    {
-      "id": 2,
-      "difficulty": "medium",
-      "observation": {
-        "headline": "Bridge crack reported",
-        "source": "local_news",
-        "confidence_score": 0.5,
-        "location": "Coimbatore",
-        "time_since_post": "10 minutes",
-        "related_reports": 2,
-        "severity_level": "medium"
-      },
-      "correct_action": "VERIFY"
+    "correct_action": "IGNORE"
+  },
+  {
+    "id": 2,
+    "difficulty": "medium",
+    "observation": {
+      "headline": "Bridge crack reported",
+      "source": "local_news",
+      "confidence_score": 0.5,
+      "location": "Coimbatore",
+      "time_since_post": "10 minutes",
+      "related_reports": 2,
+      "verified_sources": 1,
+      "severity_level": "medium"
     },
-    {
-      "id": 3,
-      "difficulty": "hard",
-      "observation": {
-        "headline": "Dam overflow warning issued",
-        "source": "gov_alert",
-        "confidence_score": 0.9,
-        "location": "Kerala",
-        "time_since_post": "1 minute",
-        "related_reports": 5,
-        "severity_level": "high"
-      },
-      "correct_action": "ESCALATE_ALERT"
-    }
-  ]
+    "correct_action": "VERIFY"
+  },
+  {
+    "id": 3,
+    "difficulty": "hard",
+    "observation": {
+      "headline": "Dam overflow warning issued",
+      "source": "gov_alert",
+      "confidence_score": 0.9,
+      "location": "Kerala",
+      "time_since_post": "1 minute",
+      "related_reports": 5,
+      "verified_sources": 4,
+      "severity_level": "high"
+    },
+    "correct_action": "ESCALATE_ALERT"
+  }
+]
