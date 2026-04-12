@@ -35,7 +35,7 @@ Respond with only the action.
 
 def run_baseline():
     tasks = json.load(open("data/tasks.json"))
-    env = CrisisEnv()
+    env = CrisisEnv(tasks)
     total_score = 0
 
     print("[START]")  # ✅ Added: required by hackathon
