@@ -1,4 +1,8 @@
 name: Crisis Intelligence Environment
+version: "1.0"
+entrypoint: inference.py
+port: 8000
+
 actions:
   - VERIFY
   - ESCALATE_ALERT
