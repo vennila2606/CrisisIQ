@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union
 import json
 import os
 import sys
@@ -22,7 +22,7 @@ _state = {}
 _current_obs = {}
 
 class StepRequest(BaseModel):
-    action: str
+    action: Union[str, dict]
 
 class ResetRequest(BaseModel):
     task_id: Optional[int] = 1
@@ -43,6 +43,10 @@ def set_task(task_id: int = 1):
 def home():
     return {"message": "Crisis Intelligence System Running 🚀"}
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 @app.get("/tasks")
 def get_tasks():
     return {
@@ -56,7 +60,6 @@ def get_tasks():
         ]
     }
 
-# ✅ Handles POST /reset with OR without body
 @app.post("/reset")
 def reset(request: Optional[ResetRequest] = None):
     global _state, _current_obs
@@ -72,7 +75,6 @@ def reset(request: Optional[ResetRequest] = None):
     }
     return {"observation": obs, "task_id": task_id}
 
-# ✅ Also handle GET /reset just in case
 @app.get("/reset")
 def reset_get(task_id: int = Query(default=1)):
     global _state, _current_obs
@@ -90,14 +92,29 @@ def reset_get(task_id: int = Query(default=1)):
 @app.post("/step")
 def step(request: StepRequest):
     global _state, _current_obs
-    action = request.action
+
+    # ✅ Handle both {"action": "VERIFY"} and {"action": {"value": "VERIFY"}}
+    if isinstance(request.action, dict):
+        action = request.action.get("value", "VERIFY")
+    else:
+        action = request.action
+
+    # ✅ Validate action
+    valid_actions = ["VERIFY", "ESCALATE_ALERT", "IGNORE", "REQUEST_MORE_INFO"]
+    if action not in valid_actions:
+        action = "VERIFY"
+
     obs, reward, done, info = env.step(action)
-    reward = max(0.01, min(0.99, round(reward, 2)))
+
+    # ✅ Strictly between 0 and 1
+    reward = max(0.001, min(0.999, round(float(reward), 3)))
+
     _current_obs = obs
     _state["past_actions"].append({"action": action, "reward": reward})
-    _state["total_reward"] = round(_state["total_reward"] + reward, 2)
+    _state["total_reward"] = round(_state["total_reward"] + reward, 3)
     _state["done"] = done
     _state["observation"] = obs
+
     return {
         "observation": obs,
         "reward": reward,
@@ -120,12 +137,19 @@ def run_simulation():
         while not done:
             action = decide_action(obs)
             obs, reward, done, _ = env.step(action)
-            reward = max(0.01, min(0.99, round(reward, 2)))
+            reward = max(0.001, min(0.999, round(float(reward), 3)))
             total_reward += reward
             step_num += 1
         results.append({
             "task_id": task["id"],
             "difficulty": task["difficulty"],
-            "total_reward": round(total_reward, 2)
+            "total_reward": round(total_reward, 3)
         })
     return {"results": results}
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()
